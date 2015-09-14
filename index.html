@@ -8,14 +8,32 @@
     <p>
       Response:
     </p>
-    <div></div>
+    <div id="text-div"></div>
   </body>
 </html>
 <script type="text/javascript">
 var req = new XMLHttpRequest();
 // req.open('GET', 'http://beta.ons.gov.uk/', true);
-req.open('GET', 'http://www.phobos7.co.uk/research/xss/simple.php', true); 
+req.open('GET', 'http://www.phobos7.co.uk/research/xss/simple.php', true);
+req.onreadystatechange = handler;
 req.send();
-var headers = req.getAllResponseHeaders().toLowerCase();
-alert(headers);
+
+function handler(evtXHR) {
+  if (req.readyState == 4)
+  {
+    outputResult(req.status);
+  }
+}
+
+function outputResult(status) {
+  var textDiv = document.getElementById("text-div");
+  if (status === 200) {
+    var response = new Date(Date.now());
+    textDiv.innerHTML += response;
+  } else if (status == 304) {
+    textDiv.innerHTML += 'This page has not changed';
+  } else {
+    textDiv.innerHTML += 'Invocation Errors Occured';
+  }
+}
 </script>
